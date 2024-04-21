@@ -235,31 +235,3 @@ func (c *ClientUploader) UploadFile(file multipart.File, object string) error {
 
 	return nil
 }
-
-func getObjects(c *gin.Context) {
-	ctx := context.Background()
-
-	client, err := storage.NewClient(ctx)
-	if err != nil {
-		log.Fatalf("Failed to create client: %v", err)
-	}
-	defer client.Close()
-
-	bucket := client.Bucket("image_bucket_go")
-	it := bucket.Objects(ctx, nil)
-	fmt.Println("Bucket", it)
-	var objects []string
-	for {
-		attr, err := it.Next()
-		if err == storage.ErrBucketNotExist {
-			fmt.Println("ErrBucketNotExist")
-			break
-		}
-		if err != nil {
-			log.Fatalf("Failed to fetch objects: %v", err)
-		}
-		objects = append(objects, attr.Name)
-	}
-
-	c.JSON(200, objects)
-}
