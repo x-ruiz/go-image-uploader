@@ -1,0 +1,39 @@
+{{template "header.html"}}
+<body>
+
+<form id="myForm" class="dragger padding_2x">
+    <label class="fixed_flex padding_3x">
+        <i class="fa fa-cloud-upload"></i>
+        <h2 class="title">Drag & Drop<br>or <em>Upload</em></h2>
+        <p>Accepted png, jpg, jpeg, pdf</p>
+        <input type="file" name="upload" input-mode="file" accept=".png,.jpg,.jpeg,.pdf" />
+		<a href="/images">
+			<input type="submit" value="Submit">
+		</a>
+    </label>
+    
+    <ul class="file_preview"></ul>
+</form>
+
+<script>
+	const form = document.getElementById("myForm");
+	form.addEventListener("submit", function(event) {
+	  event.preventDefault();
+	  const formData = new FormData(form);
+  
+	  fetch("/images", {
+		method: "POST",
+		body: formData
+	  })
+	  .then(response => response.json())
+	  .then(data => {
+		// Do something with the response data
+		console.log(data);
+		window.location.href = "/images";
+	  })
+	  .catch(error => {
+		console.error("Error:", error);
+	  });
+	});
+  </script>
+{{template "footer.html"}}
